@@ -5,7 +5,7 @@
     "scripts": {
         "check": "tsc --noEmit --skipLibCheck",
         "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .eslintignore",
-        "parse": "tsx /src/main.ts"
+        "parse": "tsx src/main.ts"
     },
     "dependencies": {
         "lodash-es": "^4.17.21"
