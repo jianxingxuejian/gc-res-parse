@@ -1,27 +1,27 @@
 {
-  "name": "gc-res-parse",
-  "private": true,
-  "version": "1.0.0",
-  "scripts": {
-    "check": "tsc --noEmit --skipLibCheck",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .eslintignore",
-    "parse": "tsx /src/parse.ts"
-  },
-  "dependencies": {
-    "lodash-es": "^4.17.21"
-  },
-  "devDependencies": {
-    "@types/fs-extra": "^9.0.13",
-    "@types/lodash-es": "^4.17.6",
-    "@types/node": "18.11.0",
-    "@typescript-eslint/eslint-plugin": "^5.40.0",
-    "@typescript-eslint/parser": "^5.40.0",
-    "eslint": "^8.25.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "fs-extra": "^10.1.0",
-    "prettier": "^2.7.1",
-    "tsx": "^3.10.1",
-    "typescript": "^4.8.4"
-  }
+    "name": "gc-res-parse",
+    "private": true,
+    "version": "1.0.0",
+    "scripts": {
+        "check": "tsc --noEmit --skipLibCheck",
+        "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .eslintignore",
+        "parse": "tsx /src/main.ts"
+    },
+    "dependencies": {
+        "lodash-es": "^4.17.21"
+    },
+    "devDependencies": {
+        "@types/fs-extra": "^9.0.13",
+        "@types/lodash-es": "^4.17.6",
+        "@types/node": "18.11.0",
+        "@typescript-eslint/eslint-plugin": "^5.40.0",
+        "@typescript-eslint/parser": "^5.40.0",
+        "eslint": "^8.25.0",
+        "eslint-config-prettier": "^8.5.0",
+        "eslint-plugin-prettier": "^4.2.1",
+        "fs-extra": "^10.1.0",
+        "prettier": "^2.7.1",
+        "tsx": "^3.10.1",
+        "typescript": "^4.8.4"
+    }
 }
