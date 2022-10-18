@@ -63,5 +63,5 @@ export function parseWeather() {
 
     writeJson('weatherIds.json', weather)
 
-    readJson('weatherIds.json', 'old')
+    // readJson('weatherIds.json', 'old')
 }

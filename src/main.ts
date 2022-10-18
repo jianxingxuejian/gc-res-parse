@@ -1,4 +1,4 @@
-import { parseWeather, parseMonster, parseQuest } from './parse'
+import { parseWeather, parseMonster, parseQuest, test } from './parse'
 
 function parse() {
     const args = process.argv.slice(2).map(item => item.toLocaleLowerCase())
@@ -13,6 +13,9 @@ function parse() {
     }
     if (check('quest')) {
         parseQuest()
+    }
+    if (check('test')) {
+        test()
     }
 }
 
