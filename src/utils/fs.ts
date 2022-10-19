@@ -4,7 +4,7 @@ import path from 'path'
 import { difference } from 'lodash-es'
 
 const { resourcesPath, newPath, oldPath, diffPath } = config
-const modeDict: Record<Mode, string> = {
+const modeDict: Record<Position, string> = {
     res: resourcesPath,
     new: newPath,
     old: oldPath,
@@ -12,7 +12,7 @@ const modeDict: Record<Mode, string> = {
 }
 
 /** parse resources json file by fileName*/
-export function readJson<T = any>(fileName: string, mode: Mode = 'res') {
+export function readJson<T = any>(fileName: string, mode: Position = 'res') {
     const filePath = path.join(modeDict[mode], fileName)
     if (!fs.existsSync(filePath)) {
         throw new Error('path not exist')
@@ -22,7 +22,11 @@ export function readJson<T = any>(fileName: string, mode: Mode = 'res') {
 }
 
 /** write json object to file */
-export function writeJson(fileName: string, json: Json, mode: Mode = 'new') {
+export function writeJson(
+    fileName: string,
+    json: Json,
+    mode: Position = 'new'
+) {
     const filePath = path.join(process.cwd(), modeDict[mode], fileName)
     mkdir(filePath)
     fs.writeFile(filePath, JSON.stringify(json, null, '\t'), 'utf-8')

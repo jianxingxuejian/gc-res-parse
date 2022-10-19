@@ -1,4 +1,4 @@
-type Mode = 'res' | 'old' | 'new' | 'diff'
+type Position = 'res' | 'old' | 'new' | 'diff'
 
 type Json = string | number | boolean | null | undefined | Json[] | JsonObject
 
