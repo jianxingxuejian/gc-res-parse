@@ -16,6 +16,9 @@ type Climate =
     | 'CLIMATE_THUNDERSTORM'
     | 'CLIMATE_MIST'
 
+const file_item = 'weatherItem.json'
+const file_ids = 'weatherIds.json'
+
 export function parseWeather() {
     const weatherData = readJson<WeatherExcelConfigData[]>(
         'ExcelBinOutput/WeatherExcelConfigData.json'
@@ -26,7 +29,7 @@ export function parseWeather() {
     weatherData.forEach(({ areaId, profileName }) => {
         weatherItem[areaId] = replaceToBlank(profileName, replaceArr)
     })
-    writeJson('weatherItem.json', weatherItem)
+    writeJson(file_item, weatherItem)
 
     const filterByKeyword = (keyword: string[]) =>
         weatherData
@@ -61,7 +64,7 @@ export function parseWeather() {
         [0, ...general, ...mist, ...mist_pick]
     ])
 
-    writeJson('weatherIds.json', weather)
+    writeJson(file_ids, weather)
 
     // readJson('weatherIds.json', 'old')
 }
