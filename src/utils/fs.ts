@@ -32,6 +32,11 @@ export function writeJson(
     fs.writeFile(filePath, JSON.stringify(json), 'utf-8')
 }
 
+export function readDir(fileName: string) {
+    const filePath = path.join(modeDict['res'], fileName)
+    return fs.readdirSync(filePath, 'utf-8')
+}
+
 function mkdir(path: string) {
     if (!fs.existsSync(path)) {
         const parent = path.split('\\').slice(0, -1)
