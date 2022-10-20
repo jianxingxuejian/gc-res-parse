@@ -1,13 +1,13 @@
 import { difference, differenceBy, merge } from 'lodash-es'
+import { diff } from 'deep-object-diff'
 import { writeJson, readJson } from '@/utils'
 
-type Data = Arrayable<number[]> | Record<string, string> | DataObject[]
+type Data = Arrayable<number[]> | Record<string, Json> | DataObject[]
 type ArrayData = PickArray<Data>
 
 export function parse(fileName: string, newData: Data) {
     //write json data to new folder
     writeJson(fileName, newData, 'new')
-    console.log(fileName + 'has been written successfully')
     // read json data from old folder
     const oldData = readJson<Data>(fileName, 'old')
     if (!oldData) {
@@ -19,38 +19,52 @@ export function parse(fileName: string, newData: Data) {
 
 function diffAndMerge(fileName: string, params: Tuple2<Data>) {
     if (isArray(params)) {
-        if (isNumberArray(params)) {
+        if (isNumArray(params)) {
             const [oldData, newData] = params
-            //@ts-ignore type security can be ensured here
-            const diff = difference(newData, oldData)
-            writeJson(fileName, diff, 'diff')
-            writeJson(fileName, merge(oldData, diff), 'merge')
+            const diffData = difference(newData, oldData)
+            writeJson(fileName, diffData, 'diff')
+            writeJson(fileName, merge(oldData, diffData), 'merge')
+        } else if (is2dNumArray(params)) {
+            const [oldData, newData] = params
+            const diffData = newData.map((x, i) => difference(x, oldData[i]))
+            writeJson(fileName, diffData, 'diff')
+            writeJson(fileName, merge(oldData, diffData), 'merge')
         } else if (isDataObjectArray(params)) {
             const [oldData, newData] = params
-            const diff = differenceBy(newData, oldData, 'id')
-            writeJson(fileName, diff, 'diff')
-            const merge = oldData.concat(diff).sort((a, b) => a.id - b.id)
-            writeJson(fileName, merge, 'merge')
+            const diffData = differenceBy(newData, oldData, 'id')
+            writeJson(fileName, diffData, 'diff')
+            const mergeData = oldData
+                .concat(diffData)
+                .sort((a, b) => a.id - b.id)
+            writeJson(fileName, mergeData, 'merge')
         }
     } else if (isRecord(params)) {
         const [oldData, newData] = params
-        const diff: Record<string, string> = {}
-        Object.entries(newData)
-            .filter(([k]) => oldData[k] === undefined)
-            .forEach(([k, v]) => (diff[k] = v))
-        writeJson(fileName, diff, 'diff')
-        writeJson(fileName, merge(oldData, diff), 'merge')
+        const diffData: Record<string, Json> = {}
+        if (typeof oldData[0] === 'string') {
+            Object.entries(newData)
+                .filter(([k]) => oldData[k] === undefined)
+                .forEach(([k, v]) => (diffData[k] = v))
+            writeJson(fileName, diffData, 'diff')
+            writeJson(fileName, merge(oldData, diffData), 'merge')
+        } else {
+            const diffData = diff(oldData, newData)
+            writeJson(fileName, diffData, 'diff')
+            writeJson(fileName, merge(oldData, diffData), 'merge')
+        }
     }
 }
 
 function isArray(params: Tuple2<Data>): params is Tuple2<ArrayData> {
     return Array.isArray(params[0])
 }
-function isNumberArray(
-    params: Tuple2<ArrayData>
-): params is Tuple2<Arrayable<number[]>> {
+function isNumArray(params: Tuple2<ArrayData>): params is Tuple2<number[]> {
     const first = params[0][0]
-    return typeof first === 'number' || Array.isArray(first)
+    return typeof first === 'number'
+}
+function is2dNumArray(params: Tuple2<ArrayData>): params is Tuple2<number[][]> {
+    const first = params[0][0]
+    return Array.isArray(first) && typeof first[0] === 'number'
 }
 function isDataObjectArray(
     params: Tuple2<ArrayData>
@@ -59,6 +73,6 @@ function isDataObjectArray(
 }
 function isRecord(
     params: Tuple2<Data>
-): params is Tuple2<Record<string, string>> {
+): params is Tuple2<Record<string, Json>> {
     return !Array.isArray(params[0])
 }

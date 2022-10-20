@@ -1,7 +1,6 @@
 import { config } from '../config'
 import fs from 'fs-extra'
 import path from 'path'
-import { difference } from 'lodash-es'
 
 const { resourcesPath, newPath, oldPath, diffPath, mergePath } = config
 const modeDict: Record<Folder, string> = {
@@ -23,7 +22,11 @@ export function readJson<T = Json>(fileName: string, folder: Folder = 'res') {
 }
 
 /** write json object to file */
-export function writeJson(fileName: string, json: Json, mode: Folder = 'new') {
+export function writeJson(
+    fileName: string,
+    json: Json | object,
+    mode: Folder = 'new'
+) {
     const filePath = path.join(process.cwd(), modeDict[mode], fileName)
     mkdir(filePath)
     fs.writeFile(filePath, JSON.stringify(json), 'utf-8')
