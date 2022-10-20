@@ -6,4 +6,4 @@ type JsonObject = {
     [x in string]: Json
 }
 
-type DataObject = { id: number | string } & JsonObject
+type DataObject = { id: number } & JsonObject

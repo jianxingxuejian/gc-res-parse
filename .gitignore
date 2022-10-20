@@ -8,7 +8,6 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
-dist
 dist-ssr
 *.local
 
@@ -23,3 +22,12 @@ dist-ssr
 *.sln
 *.sw?
 
+dist/**
+!dist/diff
+!dist/diff/test.json
+!dist/merge
+!dist/merge/test.json
+!dist/new
+!dist/new/test.json
+!dist/old
+!dist/old/test.json

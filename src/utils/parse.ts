@@ -29,7 +29,7 @@ function diffAndMerge(fileName: string, params: Tuple2<Data>) {
             const [oldData, newData] = params
             const diff = differenceBy(newData, oldData, 'id')
             writeJson(fileName, diff, 'diff')
-            const merge = Object.assign(oldData, diff)
+            const merge = oldData.concat(diff).sort((a, b) => a.id - b.id)
             writeJson(fileName, merge, 'merge')
         }
     } else if (isRecord(params)) {

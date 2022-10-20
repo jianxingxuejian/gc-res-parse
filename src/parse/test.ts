@@ -6,6 +6,9 @@ type Test = {
 }
 
 export function test() {
-    const newData: Test[] = [{ id: 1, name: 'new' }]
+    const newData: Test[] = [
+        { id: 1, name: 'a' },
+        { id: 2, name: 'b' }
+    ]
     parse('test.json', newData)
 }
