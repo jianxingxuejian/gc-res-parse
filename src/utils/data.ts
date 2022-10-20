@@ -1,5 +1,3 @@
-import { test } from '@/parse'
-
 export function replaceToBlank(text: string, search: string | string[]) {
     if (typeof search === 'string') {
         text.replace(search, '')

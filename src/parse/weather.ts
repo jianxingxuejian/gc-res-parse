@@ -1,5 +1,5 @@
-import { readJson, writeJson, replaceToBlank } from '@/utils'
-import { groupBy, sortedUniq, difference } from 'lodash-es'
+import { readJson, parse, replaceToBlank } from '@/utils'
+import { groupBy, sortedUniq } from 'lodash-es'
 
 interface WeatherExcelConfigData extends JsonObject {
     areaId: number
@@ -23,13 +23,14 @@ export function parseWeather() {
     const weatherData = readJson<WeatherExcelConfigData[]>(
         'ExcelBinOutput/WeatherExcelConfigData.json'
     )
+    if (!weatherData) return
 
-    const weatherItem: JsonObject = {}
+    const weatherItem: Record<string, string> = {}
     const replaceArr = ['Data/Environment/EnviroSystemProfile/', '/ESP', 'ESP_']
     weatherData.forEach(({ areaId, profileName }) => {
         weatherItem[areaId] = replaceToBlank(profileName, replaceArr)
     })
-    writeJson(file_item, weatherItem)
+    parse(file_item, weatherItem)
 
     const filterByKeyword = (keyword: string[]) =>
         weatherData
@@ -64,7 +65,5 @@ export function parseWeather() {
         [0, ...general, ...mist, ...mist_pick]
     ])
 
-    writeJson(file_ids, weather)
-
-    // readJson('weatherIds.json', 'old')
+    parse(file_ids, weather)
 }
