@@ -33,9 +33,7 @@ function diffAndMerge(fileName: string, params: Tuple2<Data>) {
             const [oldData, newData] = params
             const diffData = differenceBy(newData, oldData, 'id')
             writeJson(fileName, diffData, 'diff')
-            const mergeData = oldData
-                .concat(diffData)
-                .sort((a, b) => a.id - b.id)
+            const mergeData = oldData.concat(diffData).sort((a, b) => a.id - b.id)
             writeJson(fileName, mergeData, 'merge')
         }
     } else if (isRecord(params)) {
@@ -66,13 +64,9 @@ function is2dNumArray(params: Tuple2<ArrayData>): params is Tuple2<number[][]> {
     const first = params[0][0]
     return Array.isArray(first) && typeof first[0] === 'number'
 }
-function isDataObjectArray(
-    params: Tuple2<ArrayData>
-): params is Tuple2<DataObject[]> {
+function isDataObjectArray(params: Tuple2<ArrayData>): params is Tuple2<DataObject[]> {
     return typeof params[0][0] === 'object'
 }
-function isRecord(
-    params: Tuple2<Data>
-): params is Tuple2<Record<string, Json>> {
+function isRecord(params: Tuple2<Data>): params is Tuple2<Record<string, Json>> {
     return !Array.isArray(params[0])
 }

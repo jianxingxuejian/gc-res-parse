@@ -2,8 +2,7 @@ import { parseWeather, parseMonster, parseQuest, test } from './parse'
 
 function parse() {
     const args = process.argv.slice(2).map(item => item.toLocaleLowerCase())
-    const check = (name: string) =>
-        args.some(item => item === name || item === 'all')
+    const check = (name: string) => args.some(item => item === name || item === 'all')
 
     if (check('weather')) {
         parseWeather()

@@ -8,11 +8,7 @@ module.exports = {
     parserOptions: {
         sourceType: 'module'
     },
-    extends: [
-        'eslint:recommended',
-        'plugin:@typescript-eslint/recommended',
-        'plugin:prettier/recommended'
-    ],
+    extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'plugin:prettier/recommended'],
     rules: {
         'prettier/prettier': 'error',
         '@typescript-eslint/no-explicit-any': 'off',
