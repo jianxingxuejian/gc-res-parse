@@ -16,7 +16,7 @@ export function parseMonster() {
     const monsterData = readJson<MonsterExcelConfigData[]>('ExcelBinOutput/MonsterExcelConfigData.json')
     if (!monsterData) return
 
-    const monsterItem: Record<MonsterType, Record<number, string>> = {
+    const monsterItem: Record<MonsterType, Record<string, string>> = {
         MONSTER_ORDINARY: {},
         MONSTER_BOSS: {},
         MONSTER_ENV_ANIMAL: {},

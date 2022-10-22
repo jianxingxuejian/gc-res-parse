@@ -1,20 +1,23 @@
-import { readJson } from '@/utils'
+import { readJson } from './fs'
 
-export function replaceToBlank(text: string, search: string | string[]) {
+export function replaceToBlank(text: any, search: string | string[]) {
+    if (!(typeof text === 'string')) return ''
+
     if (typeof search === 'string') {
-        text.replace(search, '')
+        text = text.replaceAll(search, '')
     } else {
-        search.forEach(item => text.replace(item, ''))
+        search.forEach(item => (text = text.replaceAll(item, '')))
     }
-    return text
+    return text as string
 }
 
-export function includesArray(text: string, values: string[]) {
-    values.forEach(item => {
+export function includesArray(text: string | undefined, values: string[]) {
+    if (text === undefined) return false
+    for (const item of values) {
         if (text.includes(item)) {
             return true
         }
-    })
+    }
     return false
 }
 
@@ -24,12 +27,12 @@ export function includesArray(text: string, values: string[]) {
 // ]
 
 const locales = ['CHS', 'EN']
-const items: Record<string, Record<number, string>> = {}
+const textMap: Record<string, Record<string, string>> = {}
 locales.forEach(item => {
-    const map = readJson<Record<number, string>>(`TextMap/TextMap${item}.json`)
+    const map = readJson<Record<string, string>>(`TextMap/TextMap${item}.json`)
     if (map) {
         textMap[item] = map
     }
 })
 
-export const textMap = items
+export { textMap }
