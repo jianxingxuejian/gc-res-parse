@@ -1,117 +1,37 @@
-import fs from 'fs-extra'
-import { groupBy, sortedUniq, difference } from 'lodash-es'
+import { readJson, textMap, parse } from '@/utils'
 
-type Climate =
-    | 'CLIMATE_SUNNY'
-    | 'CLIMATE_CLOUDY'
-    | 'CLIMATE_RAIN'
-    | 'CLIMATE_THUNDERSTORM'
-    | 'CLIMATE_MIST'
-
-interface WeatherJSON {
-    areaId: number
-    weatherAreaId: number
-    maxHeightStr: string
-    gadgetId: number
-    isDefaultValid?: boolean
-    priority: number
-    profileName: string
-    defaultClimate: Climate
-    isUseDefault?: boolean
-    sceneId: number
+interface SceneExcelConfigData extends JsonObject {
+    id: number
+    scriptData: string
 }
 
-export function parseWeather() {
-    const read = fs.readFileSync(
-        'scripts/Grasscutter_Resources/Resources/ExcelBinOutput/WeatherExcelConfigData.json',
-        'utf-8'
-    )
+interface DungeonExcelConfigData extends JsonObject {
+    sceneId: number
+    nameTextMapHash: number
+}
 
-    const weatherJson: WeatherJSON[] = JSON.parse(read)
-    const weatherObj: Record<number, string> = {}
-    weatherJson.forEach(({ areaId, profileName }) => {
-        weatherObj[areaId] = profileName
-            .replace('Data/Environment/EnviroSystemProfile/', '')
-            .replace('/ESP', '')
-            .replace('ESP_', '')
-    })
-    fs.writeFile('scripts/target/weather.json', JSON.stringify(weatherObj))
+export function parseScene() {
+    const sceneData = readJson<SceneExcelConfigData[]>('ExcelBinOutput/SceneExcelConfigData.json')
+    if (!sceneData) return
 
-    const filter = (name: string) =>
-        weatherJson
-            .filter(item => item.profileName.includes(name))
-            .map(item => item.areaId)
-    const general_md = filter('Md_General')
-    const general_ly = filter('Ly_General')
-    const general_dq = filter('Dq_General')
-    const general_xm = filter('Xm_General')
+    const dungeonData = readJson<DungeonExcelConfigData[]>('ExcelBinOutput/DungeonExcelConfigData.json')
+    if (!dungeonData) return
 
-    const group = (key: string) =>
-        groupBy(weatherJson, 'defaultClimate')[key].map(item => item.areaId)
-    const sunny = group('CLIMATE_SUNNY')
-    const cloudy = group('CLIMATE_CLOUDY')
-    const rain = group('CLIMATE_RAIN')
-    const thunderstorm = group('CLIMATE_THUNDERSTORM')
-    // const snow = Object.values(group)
-    //   .flat()
-    //   .filter(item => item.profileName.includes('Snow'))
-    //   .map(item => item.areaId)
-    //   .sort((a, b) => a - b)
-    const snow = [
-        0, 2022, 2023, 2028, 2029, 2034, 2035, 2037, 2113, 2117, 2118, 2121,
-        2124, 2127, 2130, 2132, 2135, 2138, 2191, 2225
-    ]
-    const mist = group('CLIMATE_MIST')
+    const scene_CHS: Record<string, string> = {}
+    const scene_EN: Record<string, string> = {}
 
-    const weather = sortedUniq([
-        [
-            0,
-            ...general_md,
-            ...general_ly,
-            ...general_dq,
-            ...general_xm,
-            ...sunny
-        ],
-        cloudy,
-        [
-            0,
-            ...general_md,
-            ...general_ly,
-            ...general_dq,
-            ...general_xm,
-            ...rain
-        ],
-        [
-            0,
-            ...general_md,
-            ...general_ly,
-            ...general_dq,
-            ...general_xm,
-            ...thunderstorm
-        ],
-        snow,
-        [
-            0,
-            ...general_md,
-            ...general_ly,
-            ...general_dq,
-            ...mist,
-            2024,
-            2025,
-            2027,
-            2031,
-            2032,
-            2036,
-            2038,
-            2039,
-            2125,
-            2131
-        ]
-    ])
+    const dungeonMap = new Map(dungeonData.map(item => [item.sceneId, item.nameTextMapHash]))
 
-    // weather.forEach((item, index) =>
-    //     console.log(difference(item, weatherIds[index]))
-    // )
+    sceneData
+        .sort((a, b) => a.id - b.id)
+        .forEach(({ id, scriptData }) => {
+            const nameHash = dungeonMap.get(id)
+            const name_CHS = nameHash && textMap['CHS'][nameHash]
+            const name_EN = nameHash && textMap['EN'][nameHash]
+            scene_CHS[id] = name_CHS || scriptData
+            scene_EN[id] = name_EN || scriptData
+        })
 
-    fs.writeFile('scripts/target/weatherIds.json', JSON.stringify(weather))
+    parse('zh-CN/sceneItem.json', scene_CHS)
+    parse('en-US/sceneItem.json', scene_EN)
 }
