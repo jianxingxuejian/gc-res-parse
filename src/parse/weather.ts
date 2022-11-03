@@ -2,7 +2,7 @@ import { groupBy, sortedUniq } from 'lodash-es'
 import { readJson, parse, replaceToBlank } from '@/utils'
 
 interface WeatherExcelConfigData extends JsonObject {
-    areaId: number
+    areaID: number
     weatherAreaId: number
     profileName: string
     defaultClimate: Climate
@@ -20,18 +20,18 @@ export function parseWeather() {
 
     const weatherItem: Record<string, string> = {}
     const replaceArr = ['Data/Environment/EnviroSystemProfile/', '/ESP', 'ESP_']
-    weatherData.forEach(({ areaId, profileName }) => {
+    weatherData.forEach(({ areaID: areaId, profileName }) => {
         weatherItem[areaId] = replaceToBlank(profileName, replaceArr)
     })
     parse(file_item, weatherItem)
 
     const filterByKeyword = (keyword: string[]) =>
-        weatherData.filter(item => keyword.some(k => item.profileName.includes(k))).map(item => item.areaId)
+        weatherData.filter(item => keyword.some(k => item.profileName.includes(k))).map(item => item.areaID)
 
     const general = filterByKeyword(['Md_General', 'Ly_General', 'Dq_General'])
     const general_xm = filterByKeyword(['Xm_General'])
 
-    const group = (key: Climate) => groupBy(weatherData, 'defaultClimate')[key].map(item => item.areaId)
+    const group = (key: Climate) => groupBy(weatherData, 'defaultClimate')[key].map(item => item.areaID)
 
     const sunny = group('CLIMATE_SUNNY')
     const cloudy = group('CLIMATE_CLOUDY')
@@ -44,14 +44,14 @@ export function parseWeather() {
     const mist = group('CLIMATE_MIST')
     const mist_pick = [2024, 2025, 2027, 2031, 2032, 2036, 2038, 2039, 2125, 2131]
 
-    const weather = sortedUniq([
+    const weather = [
         [0, ...general, ...general_xm, ...sunny],
         cloudy,
         [0, ...general, ...general_xm, ...rain],
         [0, ...general, ...general_xm, ...thunderstorm],
         snow_pick,
         [0, ...general, ...mist, ...mist_pick]
-    ])
+    ].map(item => sortedUniq(item.sort((a, b) => a - b)))
 
     parse(file_ids, weather)
 }

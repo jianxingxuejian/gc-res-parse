@@ -1,5 +1,5 @@
 import { difference, differenceBy, merge } from 'lodash-es'
-import { diff } from 'deep-object-diff'
+import { addedDiff } from 'deep-object-diff'
 import { writeJson, readJson } from '@/utils'
 
 type Data = Arrayable<number[]> | Record<string, Json> | DataObject[]
@@ -46,7 +46,7 @@ function diffAndMerge(fileName: string, params: Tuple2<Data>) {
             writeJson(fileName, diffData, 'diff')
             writeJson(fileName, merge(oldData, diffData), 'merge')
         } else {
-            const diffData = diff(oldData, newData)
+            const diffData = addedDiff(oldData, newData)
             writeJson(fileName, diffData, 'diff')
             writeJson(fileName, merge(oldData, diffData), 'merge')
         }
