@@ -79,14 +79,14 @@ export function parseQuest() {
 
     questArray.sort((a, b) => a.id - b.id)
     parse('quest.json', questArray)
-    parse('questItem_zh-CN.json', questItem_CHS)
+    parse('zh-CN/questItem.json', questItem_CHS)
 
     const questItem_EN: Record<string, string> = {}
     Object.keys(questItem_CHS).forEach(item => {
         const text = textMap['EN'][item]
         text && (questItem_EN[item] = text)
     })
-    parse('questItem_en-US.json', questItem_EN)
+    parse('en-US/questItem.json', questItem_EN)
 }
 
 const hiddenStrs = ['$HIDDEN', '$Hidden', '【隐藏】', '（隐藏）', '(隐藏)']
