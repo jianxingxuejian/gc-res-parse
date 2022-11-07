@@ -33,15 +33,17 @@ export function parseQuest() {
     const questArray: Quest[] = []
     const questItem_CHS: Record<string, string> = {}
 
+    const textMapCHS = textMap['zh-CN']
+
     nameList.forEach(item => {
         const read = readJson<QuestData>(fileName + item)
         if (!read) return true
 
         const { id, type, showType, subQuests, titleTextMapHash, descTextMapHash } = read
 
-        const text = (titleTextMapHash && textMap['CHS'][titleTextMapHash]) || ''
+        const text = (titleTextMapHash && textMapCHS[titleTextMapHash]) || ''
 
-        let desc = descTextMapHash && textMap['CHS'][descTextMapHash]
+        let desc = descTextMapHash && textMapCHS[descTextMapHash]
         if (text === desc) {
             desc = undefined
         } else {
@@ -66,7 +68,7 @@ export function parseQuest() {
                 subQuests
                     .sort((a, b) => a.order - b.order)
                     .map(({ subId, descTextMapHash, order, showType }) => {
-                        const text = (descTextMapHash && textMap['CHS'][descTextMapHash]) || ''
+                        const text = (descTextMapHash && textMapCHS[descTextMapHash]) || ''
                         const { hidden, test, unreleased, newText } = parseText(text, showType)
                         if (descTextMapHash && newText) {
                             questItem_CHS[descTextMapHash] = newText
@@ -79,14 +81,19 @@ export function parseQuest() {
 
     questArray.sort((a, b) => a.id - b.id)
     parse('quest.json', questArray)
+
     parse('zh-CN/questItem.json', questItem_CHS)
 
-    const questItem_EN: Record<string, string> = {}
-    Object.keys(questItem_CHS).forEach(item => {
-        const text = textMap['EN'][item]
-        text && (questItem_EN[item] = text)
+    Object.keys(textMap).forEach(key => {
+        if (key !== 'zh-CN') {
+            const questItem: Record<string, string> = {}
+            Object.keys(questItem_CHS).forEach(item => {
+                const text = textMap[key][item]
+                text && (questItem[item] = text)
+            })
+            parse(key + '/questItem.json', questItem)
+        }
     })
-    parse('en-US/questItem.json', questItem_EN)
 }
 
 const hiddenStrs = ['$HIDDEN', '$Hidden', '【隐藏】', '（隐藏）', '(隐藏)']

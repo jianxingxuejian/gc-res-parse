@@ -21,17 +21,27 @@ export function includesArray(text: string | undefined, values: string[]) {
     return false
 }
 
-// const locales = [
-//     'CHS', 'CHT', 'DE', 'EN', 'ES', 'FR', 'ID',
-//     'JP', 'KR', 'PT', 'RU', 'TH', 'VI'
-// ]
+const localeDict = {
+    CHS: 'zh-CN',
+    CHT: 'zh-TW',
+    DE: 'de',
+    EN: 'en',
+    ES: 'es',
+    FR: 'fr',
+    ID: 'id-ID',
+    JP: 'ja-JP',
+    KR: 'ko-KR',
+    PT: 'pt',
+    RU: 'ru-RU',
+    TH: 'th-TH',
+    VI: 'vi-VN'
+}
 
-const locales = ['CHS', 'EN']
 const textMap: Record<string, Record<string, string>> = {}
-locales.forEach(item => {
-    const map = readJson<Record<string, string>>(`TextMap/TextMap${item}.json`)
+Object.entries(localeDict).forEach(([k, v]) => {
+    const map = readJson<Record<string, string>>(`TextMap/TextMap${k}.json`)
     if (map) {
-        textMap[item] = map
+        textMap[v] = map
     }
 })
 
