@@ -14,9 +14,11 @@ export function parseWeapon() {
     const weaponData = readJson<WeaponExcelConfigData[]>('ExcelBinOutput/WeaponExcelConfigData.json')
     if (!weaponData) return
 
+    const group = groupBy(weaponData, 'weaponType')
+
     Object.keys(textMap).forEach(locale => {
         const weaponItem: Record<string, Record<string, string>> = {}
-        Object.entries(groupBy(weaponData, 'weaponType')).forEach(
+        Object.entries(group).forEach(
             ([k, v]) =>
                 (weaponItem[k] = v.reduce(
                     (a, { id, nameTextMapHash }) => ({ ...a, [id]: textMap[locale][nameTextMapHash] }),
