@@ -84,14 +84,14 @@ export function parseQuest() {
 
     parse('zh-CN/questItem.json', questItem_CHS)
 
-    Object.keys(textMap).forEach(key => {
-        if (key !== 'zh-CN') {
+    Object.keys(textMap).forEach(locale => {
+        if (locale !== 'zh-CN') {
             const questItem: Record<string, string> = {}
             Object.keys(questItem_CHS).forEach(item => {
-                const text = textMap[key][item]
+                const text = textMap[locale][item]
                 text && (questItem[item] = text)
             })
-            parse(key + '/questItem.json', questItem)
+            parse(locale + '/questItem.json', questItem)
         }
     })
 }

@@ -14,22 +14,19 @@ export function parseWeapon() {
     const weaponData = readJson<WeaponExcelConfigData[]>('ExcelBinOutput/WeaponExcelConfigData.json')
     if (!weaponData) return
 
-    const weaponItem_CHS: Record<string, Record<string, string>> = {
-        WEAPON_SWORD_ONE_HAND: {},
-        WEAPON_CLAYMORE: {},
-        WEAPON_POLE: {},
-        WEAPON_CATALYST: {},
-        WEAPON_BOW: {}
-    }
-    const weaponItem_EN = JSON.parse(JSON.stringify(weaponItem_CHS))
-
-    Object.entries(groupBy(weaponData, 'weaponType')).forEach(([k, v]) =>
-        v.forEach(({ id, nameTextMapHash }) => {
-            weaponItem_CHS[k][id] = textMap['CHS'][nameTextMapHash]
-            weaponItem_EN[k][id] = textMap['EN'][nameTextMapHash]
-        })
-    )
-
-    parse('zh-CN/weaponItem.json', weaponItem_CHS)
-    parse('en-US/weaponItem.json', weaponItem_EN)
+    Object.keys(textMap).forEach(locale => {
+        const weapon: Record<string, Record<string, string>> = {
+            WEAPON_SWORD_ONE_HAND: {},
+            WEAPON_CLAYMORE: {},
+            WEAPON_POLE: {},
+            WEAPON_CATALYST: {},
+            WEAPON_BOW: {}
+        }
+        Object.entries(groupBy(weaponData, 'weaponType')).forEach(([k, v]) =>
+            v.forEach(({ id, nameTextMapHash }) => {
+                weapon[k][id] = textMap[locale][nameTextMapHash]
+            })
+        )
+        parse(locale + '/weaponItem.json', weapon)
+    })
 }
