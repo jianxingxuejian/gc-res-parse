@@ -15,18 +15,14 @@ export function parseWeapon() {
     if (!weaponData) return
 
     Object.keys(textMap).forEach(locale => {
-        const weapon: Record<string, Record<string, string>> = {
-            WEAPON_SWORD_ONE_HAND: {},
-            WEAPON_CLAYMORE: {},
-            WEAPON_POLE: {},
-            WEAPON_CATALYST: {},
-            WEAPON_BOW: {}
-        }
-        Object.entries(groupBy(weaponData, 'weaponType')).forEach(([k, v]) =>
-            v.forEach(({ id, nameTextMapHash }) => {
-                weapon[k][id] = textMap[locale][nameTextMapHash]
-            })
+        const weaponItem: Record<string, Record<string, string>> = {}
+        Object.entries(groupBy(weaponData, 'weaponType')).forEach(
+            ([k, v]) =>
+                (weaponItem[k] = v.reduce(
+                    (a, { id, nameTextMapHash }) => ({ ...a, [id]: textMap[locale][nameTextMapHash] }),
+                    {}
+                ))
         )
-        parse(locale + '/weaponItem.json', weapon)
+        parse(locale + '/weaponItem.json', weaponItem)
     })
 }
