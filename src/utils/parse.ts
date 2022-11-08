@@ -11,7 +11,6 @@ export function parse(fileName: string, newData: Data) {
     // read json data from old folder
     const oldData = readJson<Data>(fileName, 'old')
     if (!oldData) {
-        console.log('old data not found, stopped')
         return
     }
     diffAndMerge(fileName, [oldData, newData])

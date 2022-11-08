@@ -18,7 +18,10 @@ export function parseMonster() {
             monsterData.sort((a, b) => a.id - b.id),
             'type'
         )
-    ).forEach(([k, v]) => (monsterItem[k] = v.reduce((a, b) => ({ ...a, [b.id]: b.monsterName }), {})))
+    ).forEach(([k, v]) => {
+        monsterItem[k] = {}
+        v.forEach(({ id, monsterName }) => (monsterItem[k][id] = monsterName))
+    })
 
     parse('monsterItem.json', monsterItem)
 }
