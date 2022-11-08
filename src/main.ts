@@ -1,4 +1,13 @@
-import { parseWeather, parseMonster, parseQuest, parseScene, parseWeapon, parseAvatar, test } from './parse'
+import {
+    parseWeather,
+    parseMonster,
+    parseQuest,
+    parseScene,
+    parseWeapon,
+    parseAvatar,
+    parseMaterial,
+    test
+} from './parse'
 
 function parse() {
     const args = process.argv.slice(2).map(item => item.toLocaleLowerCase())
@@ -10,6 +19,7 @@ function parse() {
     if (check('scene')) parseScene()
     if (check('weapon')) parseWeapon()
     if (check('avatar')) parseAvatar()
+    if (check('material')) parseMaterial()
 
     if (check('test')) test()
 }

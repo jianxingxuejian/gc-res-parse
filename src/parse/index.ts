@@ -1,4 +1,5 @@
 export * from './avatar'
+export * from './material'
 export * from './monster'
 export * from './quest'
 export * from './scene'
