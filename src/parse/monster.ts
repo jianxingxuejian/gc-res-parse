@@ -4,31 +4,21 @@ import { readJson, parse } from '@/utils'
 interface MonsterExcelConfigData extends JsonObject {
     id: number
     monsterName: string
-    type: MonsterType
+    type: string
     ai: string
 }
-
-type MonsterType = 'MONSTER_ORDINARY' | 'MONSTER_BOSS' | 'MONSTER_ENV_ANIMAL' | 'MONSTER_FISH' | 'MONSTER_PARTNER'
-
-const file_item = 'monsterItem.json'
 
 export function parseMonster() {
     const monsterData = readJson<MonsterExcelConfigData[]>('ExcelBinOutput/MonsterExcelConfigData.json')
     if (!monsterData) return
 
-    const monsterItem: Record<MonsterType, Record<string, string>> = {
-        MONSTER_ORDINARY: {},
-        MONSTER_BOSS: {},
-        MONSTER_ENV_ANIMAL: {},
-        MONSTER_FISH: {},
-        MONSTER_PARTNER: {}
-    }
+    const monsterItem: Record<string, Record<string, string>> = {}
     Object.entries(
         groupBy(
             monsterData.sort((a, b) => a.id - b.id),
             'type'
         )
-    ).forEach(([k, v]) => v.forEach(({ id, monsterName }) => (monsterItem[k as MonsterType][id] = monsterName)))
+    ).forEach(([k, v]) => (monsterItem[k] = v.reduce((a, b) => ({ ...a, [b.id]: b.monsterName }), {})))
 
-    parse(file_item, monsterItem)
+    parse('monsterItem.json', monsterItem)
 }
