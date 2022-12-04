@@ -4,8 +4,6 @@ English | [简体中文](README_zh-CN.md)
 
 A simple data parsing script to extract and parse the corresponding json data for [another project](https://github.com/jianxingxuejian/grasscutter-tools) of mine.
 
-The data source is from [this project](https://github.com/tamilpp25/Grasscutter_Resources).
-
 ## Usage
 
 ```shell
@@ -13,7 +11,7 @@ The data source is from [this project](https://github.com/tamilpp25/Grasscutter_
 pnpm install
 
 // Make sure the res folder is on the same level as this project. You can choose all or one or several items.
-pnpm parse all 
+pnpm parse all
 pnpm parse avatar
 pnpm parse quest scene monster...
 ```
