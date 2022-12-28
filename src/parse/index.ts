@@ -1,3 +1,4 @@
+export * from './artifact-info'
 export * from './avatar'
 export * from './material'
 export * from './monster'

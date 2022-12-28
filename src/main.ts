@@ -6,6 +6,7 @@ import {
     parseWeapon,
     parseAvatar,
     parseMaterial,
+    parseArtifact,
     test
 } from './parse'
 
@@ -20,6 +21,7 @@ function parse() {
     if (check('weapon')) parseWeapon()
     if (check('avatar')) parseAvatar()
     if (check('material')) parseMaterial()
+    if (check('artifact')) parseArtifact()
 
     if (check('test')) test()
 }
